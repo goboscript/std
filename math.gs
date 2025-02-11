@@ -73,6 +73,11 @@
 # Atan2 value of y, then x. Adapted from meunspeakable
 # You may want to check edge cases at angles of 90 degrees (0, 90, 180, 270)
 %define ATAN2(Y,X) (-2 * (Y < 0) + 1) * acos(X / sqrt(X * X + Y * Y)) / 57.2957795131
+################################################################
+
+# Return SIGN of V. If V < 0, return -1, elif V == 0, return 0, else return 1
+# 'Undefined' behaviour when used with non-numbers or booleans
+%define SIGN(V) (V > 0) - (V[i] == "-")
 
 ################################################################
 
