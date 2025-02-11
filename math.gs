@@ -70,6 +70,10 @@
 %define SINH(X) ((antiln(X)-antiln(-(X)))/2)
 %define TANH(X) ((antiln(X)-antiln(-(X)))/(antiln(X)+antiln(-(X))))
 
+# Atan2 value of y, then x. Adapted from meunspeakable
+# You may want to check edge cases at angles of 90 degrees (0, 90, 180, 270)
+%define ATAN2(Y,X) (-2 * (Y < 0) + 1) * acos(X / sqrt(X * X + Y * Y)) / 57.2957795131
+
 ################################################################
 
 %define PI 3.141592653589793
