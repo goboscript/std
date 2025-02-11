@@ -313,3 +313,12 @@ func repeatstr(text, count) {
         }                                                                              \
         i++;                                                                           \
     }
+
+# Fill a string with zeroes to the left so that is the specified length.
+func zfill(s, zeroes) {
+    local ret = $s;
+    repeat $zeroes - length $s {
+        ret = 0 & ret;
+    }
+    return ret;
+}
