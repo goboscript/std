@@ -58,6 +58,9 @@
 # Return the distance between the points `(X1,Y1)` and `(X2,Y2)`.
 %define DIST(X1,Y1,X2,Y2) sqrt(((X2)-(X1))*((X2)-(X1))+((Y2)-(Y1))*((Y2)-(Y1)))
 
+# Return the direction (of a sprite) from a position  `(CX, CY)` to `(X, Y)`
+%define DIR(X,Y,CX,CY) atan (((X)-(CX)) / ((Y)-(CY))) + 180 * ((CY) > (Y))
+
 ################################################################
 
 %define ACOSH(X) ln((X)+sqrt((X)*(X)-1))
