@@ -31,6 +31,9 @@
 # Return nth root of x
 %define NROOT(n,x) antiln(ln(x) / n)
 
+# Return `log base b of x`
+%define LOGB(b,x) ln(x) / ln(b)
+
 ################################################################
 
 # Return the gamma function of `VALUE`.
