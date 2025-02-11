@@ -17,6 +17,9 @@
 # Parse a hexadecimal value.
 %define HEX(VALUE) (("0x"&(VALUE))+0)
 
+# Parse an octal value.
+%define OCT(VALUE) (("0o"&(VALUE))+0)
+
 # Parse a binary value.
 %define BIN(VALUE) (("0b"&(VALUE))+0)
 
