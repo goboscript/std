@@ -28,6 +28,9 @@
 # Return `BASE` raised to the power of `EXP`.
 %define POW(BASE,EXP) antiln(ln(BASE)*(EXP))
 
+# Return nth root of x
+%define NROOT(n,x) antiln(ln(x) / n)
+
 ################################################################
 
 # Return the gamma function of `VALUE`.
