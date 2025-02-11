@@ -81,5 +81,13 @@
 
 ################################################################
 
+# Linear interpolation from a to b, with a ratio of t
+%define LERP(A,B,T) (A) + ((B) - (A)) * (T)
+
+# Work out the ratio of val from a to b
+%define INVLERP(VAL,A,B) ((VAL) - (A)) / ((B) - (A))
+
+################################################################
+
 %define PI 3.141592653589793
 %define E 2.718281828459045
