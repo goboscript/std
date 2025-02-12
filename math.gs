@@ -85,7 +85,7 @@ func safepow(x, y) {
 
 # Return SIGN of V. If V < 0, return -1, elif V == 0, return 0, else return 1
 # 'Undefined' behaviour when used with non-numbers or booleans
-%define SIGN(V) (V > 0) - (V[i] == "-")
+%define SIGN(V) (V > 0) - (V[1] == "-")
 
 ################################################################
 
