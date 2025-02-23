@@ -1,5 +1,6 @@
 %define PI 3.141592653589793
 %define E 2.718281828459045
+%define SQRT2 1.4142135623730951
 
 # Return the minimum of `A` and `B`.
 %define MIN(A,B) ((A) - ((A) - (B)) * ((A) > (B)))
