@@ -2,121 +2,178 @@
 %define ASCII_LOWERCASE "abcdefghijklmnopqrstuvwxyz"
 %define ASCII_DIGITS "0123456789"
 
-# Return the characters of $text between $start and $end (inclusive).
+%define strbuf std__string__strbuf
+
+list strbuf;
+
+# Slice $text from $start to $end, $end is exclusive. $start and $end are 1-based.
 func slice(text, start, end) {
-    local result = "";
-    local i = $start;
-    repeat 1 + $end - $start {
-        result &= $text[i];
-        i++;
+    delete strbuf;
+    repeat $end - $start {
+        add $text[$start + length(strbuf)] to strbuf;
     }
-    return result;
+    return strbuf;
 }
 
-# Remove $delete_count characters from $text starting at $start and insert $ins
-# between.
-func splice(text, start, delete_count, ins) {
-    local result = "";
+# Conditional macro to check if $text starts with $prefix.
+%define ENDSWITH(TEXT,SUFFIX)                                                          \
+    (slice((TEXT), 1 + (length(TEXT) - length(SUFFIX)), 1 + length(TEXT)) == (SUFFIX))
+
+# Conditional macro to check if $text starts with $prefix.
+%define STARTSWITH(TEXT,PREFIX)                                                        \
+    (slice((TEXT), 1, 1 + length(PREFIX)) == (PREFIX))
+
+# Remove $prefix from the beginning of $text.
+%define REMOVEPREFIX(TEXT,PREFIX) (splice((TEXT), 1, length(PREFIX), ""))
+
+# Remove $suffix from the end of $text.
+%define REMOVESUFFIX(TEXT,SUFFIX)                                                      \
+    (splice(TEXT, 1 + (length(TEXT) - length(SUFFIX)), length(SUFFIX), ""))
+
+# Replace all occurrences of $subtext with $repl in $text.
+func replace(text, subtext, repl) {
     local i = 1;
-    if $start > 0 {
-        repeat $start - 1 {
-            result &= $text[i];
-            i++;
-        }
-    } else {
-        repeat length($text) + $start {
-            result &= $text[i];
-            i++;
-        }
-    }
-    result &= $ins;
-    i += $delete_count;
+    local result = "";
+    delete strbuf;
     until i > length($text) {
-        result &= $text[i];
+        add $text[i] to strbuf;
+        if contains(strbuf, $subtext) {
+            repeat length($subtext) {
+                delete strbuf["last"];
+            }
+            result &= strbuf & $repl;
+            delete strbuf;
+        }
         i++;
     }
-    return result;
+    return result & strbuf;
+}
+
+# Replace first $n occurrences of $subtext with $repl in $text.
+func replacen(text, subtext, repl, n) {
+    local i = 1;
+    local n = 0;
+    local result = "";
+    delete strbuf;
+    until i > length($text) {
+        add $text[i] to strbuf;
+        if contains(strbuf, $subtext) {
+            if n < $n {
+                repeat length($subtext) {
+                    delete strbuf["last"];
+                }
+                result &= strbuf & $repl;
+            } else {
+                result &= strbuf;
+            }
+            delete strbuf;
+            n++;
+        }
+        i++;
+    }
+    return result & strbuf;
+}
+
+# Replace the $n-th occurrence of $subtext with $repl in $text.
+func replacenth(text, subtext, repl, n) {
+    local i = 1;
+    local n = 1;
+    local result = "";
+    delete strbuf;
+    until i > length($text) {
+        add $text[i] to strbuf;
+        if contains(strbuf, $subtext) {
+            if n == $n {
+                repeat length($subtext) {
+                    delete strbuf["last"];
+                }
+                result &= strbuf & $repl;
+            } else {
+                result &= strbuf;
+            }
+            delete strbuf;
+            n++;
+        }
+        i++;
+    }
+    return result & strbuf;
+}
+
+# Remove $len characters from $text starting at $start and insert $repl in its place.
+func splice(text, start, len, repl) {
+    delete strbuf;
+    repeat $start - 1 {
+        add $text[1+length(strbuf)] to strbuf;
+    }
+    local result = strbuf & $repl;
+    delete strbuf;
+    local i = $start + $len;
+    repeat 1 + (length($text) - ($start + $len)) {
+        add $text[i] to strbuf;
+        i++;
+    }
+    return result & strbuf;
 }
 
 # Transform ASCII letters in $text to uppercase.
 func uppercase(text) {
-    local result = "";
-    local i = 1;
+    delete strbuf;
     repeat length($text) {
-        local j = 1;
-        until $text[i] == ASCII_UPPERCASE[j] or j > 26 {
-            j++;
+        local i = 1;
+        until $text[1+length(strbuf)] == ASCII_UPPERCASE[i] or i > 26 {
+            i++;
         }
-        if j > 26 {
-            result &= $text[i];
+        if i > 26 {
+            add $text[1+length(strbuf)] to strbuf;
         } else {
-            result &= ASCII_UPPERCASE[j];
+            add ASCII_UPPERCASE[i] to strbuf;
         }
-        i++;
     }
-    return result;
+    return strbuf;
 }
 
 # Transform ASCII letters in $text to lowercase.
 func lowercase(text) {
-    local result = "";
-    local i = 1;
+    delete strbuf;
     repeat length($text) {
-        local j = 1;
-        until $text[i] == ASCII_UPPERCASE[j] or j > 26 {
-            j++;
+        local i = 1;
+        until $text[1+length(strbuf)] == ASCII_UPPERCASE[i] or i > 26 {
+            i++;
         }
-        if j > 26 {
-            result &= $text[i];
+        if i > 26 {
+            add $text[1+length(strbuf)] to strbuf;
         } else {
-            result &= ASCII_LOWERCASE[j];
+            add ASCII_LOWERCASE[i] to strbuf;
         }
-        i++;
     }
-    return result;
+    return strbuf;
 }
 
-# Transform the first character in $text to uppercase, and the rest to lowercase.
+# Transform the first character in $text to uppercase, and the rest to lowercase
 func capitalize(text) {
-    local result = "";
+    delete strbuf;
     local i = 1;
     until $text[1] == ASCII_UPPERCASE[i] or i > 26 {
         i++;
     }
     if i > 26 {
-        result &= $text[1];
+        add $text[1] to strbuf;
     } else {
-        result &= ASCII_UPPERCASE[i];
+        add ASCII_UPPERCASE[i] to strbuf;
     }
-    i++;
-    repeat length($text) - 1 {
-        local j = 1;
-        until $text[i] == ASCII_LOWERCASE[j] or j > 26 {
-            j++;
+    repeat length($text)-1 {
+        local i = 1;
+        until $text[1+length(strbuf)] == ASCII_UPPERCASE[i] or i > 26 {
+            i++;
         }
-        if j > 26 {
-            result &= $text[i];
+        if i > 26 {
+            add $text[1+length(strbuf)] to strbuf;
         } else {
-            result &= ASCII_LOWERCASE[j];
+            add ASCII_LOWERCASE[i] to strbuf;
         }
-        i++;
     }
-    return result;
+    return strbuf;
 }
-
-# Conditional macro to check if $text starts with $prefix.
-%define ENDSWITH(TEXT,SUFFIX)                                                          \
-    (slice((TEXT), 1 + length(TEXT) - length(SUFFIX), length(TEXT)) == (SUFFIX))
-
-# Conditional macro to check if $text starts with $prefix.
-%define STARTSWITH(TEXT,PREFIX)                                                        \
-    (slice((TEXT), 1, length(PREFIX)) == (PREFIX))
-
-# Remove $prefix from the beginning of $text.
-%define REMOVEPREFIX(TEXT,PREFIX) (splice(TEXT, 1, length(PREFIX), ""))
-
-# Remove $suffix from the end of $text.
-%define REMOVESUFFIX(TEXT,SUFFIX) (splice(TEXT, -length(SUFFIX), length(SUFFIX), ""))
 
 # Return the index of the first occurrence of $char in $text, or 0 if not found.
 func findchar(text, char) {
@@ -179,16 +236,16 @@ func isalpha(text) {
 
 # Remove leading characters in $text that are in $chars.
 func lstrip(text, chars) {
-    local result = "";
     local i = 1;
     until $text[i] not in $chars or i > length($text) {
         i++;
     }
+    delete strbuf;
     until i > length($text) {
-        result &= $text[i];
+        add $text[i] to strbuf;
         i++;
     }
-    return result;
+    return strbuf;
 }
 
 # Remove trailing characters in $text that are in $chars.
@@ -197,36 +254,85 @@ func rstrip(text, chars) {
     until $text[i] not in $chars or i == 1 {
         i--;
     }
-    local result = "";
-    j = 1;
-    until j > i {
-        result &= $text[j];
-        j++;
+    delete strbuf;
+    until (1+length(strbuf)) > i {
+        add $text[1+length(strbuf)] to strbuf;
     }
-    return result;
+    return strbuf;
 }
 
 # Remove leading and trailing characters in $text that are in $chars.
-%define STRIP(text,chars) lstrip(rstrip(text, chars), chars)
+func strip(text, chars) {
+    local i = 1;
+    until $text[i] not in $chars or i > length($text) {
+        i++;
+    }
+    delete strbuf;
+    until i > length($text) {
+        add $text[i] to strbuf;
+        i++;
+    }
+    until strbuf["last"] not in $chars {
+        delete strbuf["last"];
+    }
+    return strbuf;
+}
 
 list split;
-
-# Split $text into a list of strings, separated by $sep. Result is stored in list
-# `split`.
+# Split $text into list `split`, separated by character $sep.
 proc split text, sep {
     delete split;
-    local part = "";
+    delete strbuf;
     local i = 1;
     repeat length($text) {
         if $text[i] == $sep {
-            add part to split;
-            part = "";
+            add strbuf to split;
+            delete strbuf;
         } else {
-            part &= $text[i];
+            add $text[i] to strbuf;
         }
         i++;
     }
-    add part to split;
+    add strbuf to split;
+}
+
+# Split $text into list `split`, separated by newlines.
+proc splitlines text {
+    delete split;
+    delete strbuf;
+    local i = 1;
+    repeat length($text) {
+        if $text[i] in "\r\n" {
+            add strbuf to split;
+            delete strbuf;
+        } else {
+            add $text[i] to strbuf;
+        }
+        i++;
+    }
+    if strbuf == "" {} else {
+        add strbuf to split;
+    }
+}
+
+# Reverse $text.
+func reverse(text) {
+    delete strbuf;
+    local i = 1;
+    repeat length($text) {
+        add $text[1+length($text)-i] to strbuf;
+        i++;
+    }
+    return strbuf;
+}
+
+# Repeat $text $n times.
+func repeatstr(text, n) {
+    local result = "";
+    repeat $n {
+        result &= $text;
+    }
+    return result;
 }
 
 # Return a titlecased version of $text: words start with uppercase characters,
@@ -256,60 +362,79 @@ func titlecase(text) {
     return result;
 }
 
-# Reverse $text.
-func reverse(text) {
-    local result = "";
-    local i = 1;
-    repeat length($text) {
-        result = $text[i] & result;
-        i++;
-    }
-    return result;
-}
-
-# Replace all occurrences of $replaced in $text with $replacement.
-func replace(text, replaced, replacement) {
-    local result = "";
-    local i = 1;
-    repeat length($text) {
-        local j = 0;
-        local replace = true;
-        repeat length($replaced) {
-            if $text[i + j] != $replaced[j + 1] {
-                replace = false;
-            }
-            j++;
-        }
-        if replace == true {
-            i += length($replaced) - 1;
-            result &= $replacement;
-        } else {
-            result &= $text[i];
-        }
-        i++;
-    }
-    return result;
-}
-
-# Repeat $text $count times.
-func repeatstr(text, count) {
-    local result = "";
-    local i = 1;
-    repeat $count {
-        result &= $text;
-        i++;
-    }
-    return result;
-}
-
-# Join `LIST` elements into a string, separated by `SEP` and store the result in `STORE`.
+# Join `LIST` elements into a string, separated by `SEP` and store the result in a local
+# variable `STORE`.
 %define JOIN(LIST,SEP,STORE)                                                           \
     local STORE = "";                                                                  \
     local i = 1;                                                                       \
     repeat length(LIST) {                                                              \
         STORE &= LIST[i];                                                              \
         if i < length(LIST) {                                                          \
-            STORE &= SEP;                                                              \
+            STORE &= (SEP);                                                            \
         }                                                                              \
         i++;                                                                           \
     }
+
+# Join `LIST` by `FIELD` with `SEP` separator and store the result in a local variable
+# `STORE`.
+%define JOIN_BY_FIELD(LIST,FIELD,SEP,STORE)                                            \
+    local STORE = "";                                                                  \
+    local i = 1;                                                                       \
+    repeat length(LIST) {                                                              \
+        STORE &= LIST[i]FIELD;                                                         \
+        if i < length(LIST) {                                                          \
+            STORE &= (SEP);                                                            \
+        }                                                                              \
+        i++;                                                                           \
+    }
+
+func truncate(text, maxlength) {
+    if length($text) > $maxlength {
+        return slice($text, 1, $maxlength-4) & "...";
+    } else {
+        return $text;
+    }
+}
+
+func casecmp(a, b) {
+    if length($a) != length($b) {
+        return false;
+    }
+    local i = 1;
+    repeat length($a) {
+        switch_costume $a;
+        local c = costume_number();
+        switch_costume $b;
+        if c != costume_number() {
+            return false;
+        }
+        i++;
+    }
+    return true;
+}
+
+func countchar(text, char) {
+    local i = 1;
+    local count = 0;
+    repeat length($text) {
+        if $text[i] == $char {
+            count++;
+        }
+        i++;
+    }
+    return count;
+}
+
+func countchars(text, chars) {
+    local i = 1;
+    local count = 0;
+    repeat length($text) {
+        if $text[i] in $chars {
+            count++;
+        }
+        i++;
+    }
+    return count;
+}
+
+%undef strbuf

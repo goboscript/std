@@ -1,5 +1,5 @@
 # Return the emoji for the shortcode `NAME`.
-%define EMOJI(NAME) emojis[(NAME) in emoji_names]
+%define EMOJI(NAME) emoji_values[(NAME) in emoji_names]
 
 # List of all emoji shortcodes.
 list emoji_names = [
@@ -5727,7 +5727,7 @@ list emoji_names = [
 ];
 
 # List of all emojis.
-list emojis = [
+list emoji_values = [
     "💯",
     "🔢",
     "⚽",

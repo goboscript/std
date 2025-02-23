@@ -2,13 +2,13 @@
 %define INSERTION_SORT(LIST)                                                           \
     local i = 2;                                                                       \
     until i > length(LIST) {                                                           \
-        local x = LIST[i];                                                             \
+        local isx = LIST[i];                                                           \
         local j = i;                                                                   \
-        until j <= 1 or LIST[j - 1] <= x {                                             \
+        until j <= 1 or LIST[j - 1] <= isx {                                           \
             LIST[j] = LIST[j - 1];                                                     \
             j--;                                                                       \
         }                                                                              \
-        LIST[j] = x;                                                                   \
+        LIST[j] = isx;                                                                 \
         i++;                                                                           \
     }
 
@@ -17,13 +17,13 @@
 %define INSERTION_SORT_BY_FIELD(TYPE,LIST,FIELD)                                       \
     local i = 2;                                                                       \
     until i > length(LIST) {                                                           \
-        local TYPE x = LIST[i];                                                        \
+        local TYPE isfx = LIST[i];                                                     \
         local j = i;                                                                   \
-        until j <= 1 or LIST[j - 1].FIELD <= x.FIELD {                                 \
+        until j <= 1 or LIST[j - 1]FIELD <= isfx FIELD {                               \
             LIST[j] = LIST[j - 1];                                                     \
             j--;                                                                       \
         }                                                                              \
-        LIST[j] = x;                                                                   \
+        LIST[j] = isfx;                                                                \
         i++;                                                                           \
     }
 
@@ -54,7 +54,7 @@
 # Find the largest element in `LIST` that satisfies `CMP`, and store the result in
 # `STORE`. local `i` is the index of the current element.
 %define FINDMAX(LIST,CMP,STORE)                                                        \
-    local STORE = LIST[1];                                                             \
+    local STORE = "-Infinity";                                                         \
     local i = 1;                                                                       \
     repeat length(LIST) {                                                              \
         if CMP {                                                                       \
@@ -68,7 +68,7 @@
 # Find the smallest element in `LIST` that satisfies `CMP`, and store the result in
 # `STORE`. local `i` is the index of the current element.
 %define FINDMIN(LIST,CMP,STORE)                                                        \
-    local STORE = LIST[1];                                                             \
+    local STORE = "Infinity";                                                          \
     local i = 1;                                                                       \
     repeat length(LIST) {                                                              \
         if CMP {                                                                       \
@@ -100,6 +100,14 @@
         i++;                                                                           \
     }
 
+# Extend `DEST` with the elements of `SRC`.
+%define EXTEND(SRC,DEST)                                                               \
+    local i = 1;                                                                       \
+    repeat length(SRC) {                                                               \
+        add SRC[i] to DEST;                                                            \
+        i++;                                                                           \
+    }
+
 # Remove duplicate elements from `LIST`.
 %define UNIQUE(LIST)                                                                   \
     local i = 1;                                                                       \
@@ -115,40 +123,43 @@
         i++;                                                                           \
     }
 
-# Sum the field `FIELD` in `LIST` of type `TYPE` that satisfy `CMP`, and store the
-# result in `STORE`.
-%define SUM_BY_FIELD(TYPE,LIST,FIELD,CMP,STORE)                                        \
+# Sum the field `FIELD` in `LIST` that satisfy `CMP`, and store the result in `STORE`.
+%define SUM_BY_FIELD(LIST,FIELD,CMP,STORE)                                             \
     local STORE = 0;                                                                   \
     local i = 1;                                                                       \
     repeat length(LIST) {                                                              \
         if CMP {                                                                       \
-            STORE += LIST[i].FIELD;                                                    \
+            STORE += LIST[i]FIELD;                                                     \
         }                                                                              \
         i++;                                                                           \
     }
 
+# TODO [BLOCKED BY]: https://github.com/aspizu/goboscript/issues/71
 # Find the largest `FIELD` value in `LIST` of type `TYPE` that satisfies `CMP` and store
 # the result in `STORE`.
 %define FINDMAX_BY_FIELD(TYPE,LIST,FIELD,CMP,STORE)                                    \
-    local TYPE STORE = LIST[1];                                                        \
+    local TYPE STORE;                                                                  \
+    STORE FIELD = "-Infinity";                                                         \
     local i = 1;                                                                       \
     repeat length(LIST) {                                                              \
         if CMP {                                                                       \
-            if LIST[i].FIELD > STORE.FIELD {                                           \
+            if LIST[i]FIELD > STORE FIELD {                                            \
                 STORE = LIST[i];                                                       \
             }                                                                          \
         }                                                                              \
         i++;                                                                           \
     }
 
+# TODO [BLOCKED BY]: https://github.com/aspizu/goboscript/issues/71
 # Find the smallest `FIELD` value in `LIST` of type `TYPE` that satisfies `CMP` and
 # store the result in `STORE`.
 %define FINDMIN_BY_FIELD(TYPE,LIST,FIELD,CMP,STORE)                                    \
-    local TYPE STORE = LIST[1];                                                        \
+    local TYPE STORE;                                                                  \
+    STORE FIELD = "Infinity";                                                          \
     local i = 1;                                                                       \
     repeat length(LIST) {                                                              \
         if CMP {                                                                       \
-            if LIST[i].FIELD < STORE.FIELD {                                           \
+            if LIST[i]FIELD < STORE FIELD {                                            \
                 STORE = LIST[i];                                                       \
             }                                                                          \
         }                                                                              \
@@ -161,7 +172,7 @@
     until i > length(LIST) {                                                           \
         local j = i + 1;                                                               \
         until j > length(LIST) {                                                       \
-            if LIST[i].FIELD == LIST[j].FIELD {                                        \
+            if LIST[i] FIELD == LIST[j] FIELD {                                        \
                 delete LIST[j];                                                        \
             } else {                                                                   \
                 j++;                                                                   \
