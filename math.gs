@@ -57,6 +57,9 @@
 # Linearly interpolate between `A` and `B` by `T`.
 %define LERP(A,B,T) ((A)+((B)-(A))*(T))
 
+# Work out the ratio of `VAL` from `A` to `B`.
+%define INVLERP(VAL,A,B) ((VAL) - (A)) / ((B) - (A))
+
 # Re-maps a `V` from the range `A` to `B` to the range `C` to `D`.
 %define MAP(A,B,C,D,V) (((V)-(B))*((D)-(C))/((A)-(B))+(C))
 
