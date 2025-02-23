@@ -1,3 +1,7 @@
+%define PI 3.141592653589793
+%define E 2.718281828459045
+%define SQRT2 1.4142135623730951
+
 # Return the minimum of `A` and `B`.
 %define MIN(A,B) ((A) - ((A) - (B)) * ((A) > (B)))
 
@@ -16,10 +20,26 @@
 # Parse a binary value.
 %define BIN(VALUE) (("0b"&(VALUE))+0)
 
+# Parse a octal value.
+%define OCT(VALUE) (("0o"&(VALUE))+0)
+
+%define ACOSH(X) ln((X)+sqrt((X)*(X)-1))
+%define ASINH(X) ln((X)+sqrt((X)*(X)+1))
+%define ATANH(X) ln((1+(X))/(1-(X)))/2
+%define COSH(X) ((antiln(X)+antiln(-(X)))/2)
+%define SINH(X) ((antiln(X)-antiln(-(X)))/2)
+%define TANH(X) ((antiln(X)-antiln(-(X)))/(antiln(X)+antiln(-(X))))
+
+# Return the distance between the points `(X1,Y1)` and `(X2,Y2)`.
+%define DIST(X1,Y1,X2,Y2) sqrt(((X2)-(X1))*((X2)-(X1))+((Y2)-(Y1))*((Y2)-(Y1)))
+
+# Return the magnitude of the vector `(X,Y)`.
+%define MAG(X,Y) sqrt((X)*(X)+(Y)*(Y))
+
 # Return `BASE` raised to the power of `EXP`.
 %define POW(BASE,EXP) antiln(ln(BASE)*(EXP))
 
-# Return the gamma function of `VALUE`.
+# Gamma correct `VALUE` with power 2.2
 %define GAMMA(VALUE) antiln(ln(VALUE)/2.2)
 
 # Clamp `VALUE` above zero. (Returns 0 for `VALUE` < 0)
@@ -33,16 +53,19 @@
 %define CLAMP(VALUE,MIN,MAX) (((VALUE)>(MIN))*((MAX)+((VALUE)-(MAX))*((VALUE)<(MAX))))
 
 # Return the `N`th bit of `V`'s binary representation.
-%define BIT(N, V) (((V) // antiln((N) * ln 2) % 2)
+%define BIT(N,V) (((V) // antiln((N) * ln 2) % 2))
 
-# Return the distance between the points `(X1,Y1)` and `(X2,Y2)`.
-%define DIST(X1,Y1,X2,Y2) sqrt(((X2)-(X1))*((X2)-(X1))+((Y2)-(Y1))*((Y2)-(Y1)))
+# Linearly interpolate between `A` and `B` by `T`.
+%define LERP(A,B,T) ((A)+((B)-(A))*(T))
 
-%define ACOSH(X) ln((X)+sqrt((X)*(X)-1))
-%define ASINH(X) ln((X)+sqrt((X)*(X)+1))
-%define ATANH(X) ln((1+(X))/(1-(X)))/2
-%define COSH(X) ((antiln(X)+antiln(-(X)))/2)
-%define SINH(X) ((antiln(X)-antiln(-(X)))/2)
-%define TANH(X) ((antiln(X)-antiln(-(X)))/(antiln(X)+antiln(-(X))))
-%define PI 3.141592653589793
-%define E 2.718281828459045
+# Work out the ratio of `VAL` from `A` to `B`.
+%define INVLERP(VAL,A,B) ((VAL) - (A)) / ((B) - (A))
+
+# Re-maps a `V` from the range `A` to `B` to the range `C` to `D`.
+%define MAP(A,B,C,D,V) (((V)-(B))*((D)-(C))/((A)-(B))+(C))
+
+# Convert degrees to radians.
+%define RAD(DEG) ((DEG) * 0.017453292519943295)
+
+# Convert radians to degrees.
+%define DEG(RAD) ((RAD) * 57.29577951308232)
