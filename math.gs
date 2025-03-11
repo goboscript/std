@@ -55,6 +55,9 @@ func atan2(y, x) {
     return 2 * atan((MAG($x, $y) - $x) / $y);
 }
 
+# Get the direction to (`X`, `Y`) from (`CX`, `CY`)
+%define DIR(X,Y,CX,CY) atan (((X)-(CX)) / ((Y)-(CY))) + 180 * ((CY) > (Y))
+
 # Gamma correct `VALUE` with power 2.2
 %define GAMMA(VALUE) antiln(ln(VALUE)/2.2)
 
