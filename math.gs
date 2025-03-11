@@ -49,6 +49,12 @@ func safepow(base, exp) {
     return POW($base, abs($exp)) * SIGN($exp);
 }
 
+func atan2(y, x) {
+    # It is better to make it a function since it uses the arguments multiple times
+    # formula from https://en.wikipedia.org/wiki/Atan2
+    return 2 * atan((MAG($x, $y) - $x) / $y);
+}
+
 # Gamma correct `VALUE` with power 2.2
 %define GAMMA(VALUE) antiln(ln(VALUE)/2.2)
 
