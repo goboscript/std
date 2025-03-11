@@ -39,6 +39,9 @@
 # Return `BASE` raised to the power of `EXP`.
 %define POW(BASE,EXP) antiln(ln(BASE)*(EXP))
 
+# Should the paramaters be reversed?
+%define LOGB(VALUE,BASE) ln(VALUE) / ln(BASE)
+
 # Gamma correct `VALUE` with power 2.2
 %define GAMMA(VALUE) antiln(ln(VALUE)/2.2)
 
