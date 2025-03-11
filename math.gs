@@ -46,7 +46,7 @@
 %define SIGN(VALUE) ((VALUE > 0) - (VALUE < 0))
 
 func safepow(base, exp) {
-    return POW($base, abs($exp)) * SIGN($exp);
+    return POW(abs($base), $exp) * (2 * not($base < 0 and $exp % 2) - 1);
 }
 
 func atan2(y, x) {
