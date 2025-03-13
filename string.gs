@@ -437,4 +437,13 @@ func countchars(text, chars) {
     return count;
 }
 
+func zfill(text, zeroes) {
+    local ret = $text;
+
+    repeat $zeroes - length $text {
+        ret = "0" & ret;
+    }
+    return ret;
+}
+
 %undef strbuf
