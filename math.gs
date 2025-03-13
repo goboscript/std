@@ -39,9 +39,6 @@
 # Return `BASE` raised to the power of `EXP`.
 %define POW(BASE,EXP) antiln(ln(BASE)*(EXP))
 
-# Should the paramaters be reversed?
-%define LOGB(VALUE,BASE) ln(VALUE) / ln(BASE)
-
 # Return the sign of `VALUE` (-1 when negative, 1 when positive, and 0 if 0)
 %define SIGN(VALUE) ((VALUE > 0) - (VALUE < 0))
 
