@@ -47,6 +47,15 @@ proc test {
     ASSERT_EQ(MAP(0, 1, 50, 100, 0.5), 75, "MAP(0, 1, 50, 100, 0.5)");
     ASSERT_EQ(RAD("90"), PI/2, "RAD(90)");
     ASSERT_EQ(DEG(PI/"2"), 90, "DEG(PI/2)");
+    ASSERT_EQ(SIGN(123), 1, "SIGN(123)")
+    ASSERT_EQ(SIGN(0), 0, "SIGN(0)")
+    ASSERT_EQ(SIGN(-456), -1, "SIGN(-456)")
+    ASSERT_EQ(safepow(3, 4), 81, "safepow(3, 4)")
+    ASSERT_EQ(safepow(-3, 3), -27, "safepow(-3, 3)")
+    ASSERT_EQ(safepow(4, -2), 0.0625, "safepow(4, -2)")
+    ASSERT_EQ(atan2(5, 4), 51.34019174590991, "ATAN2(5, 4)")
+    ASSERT_EQ(DIR(50, 50, 25, 25), 45, "DIR(50, 50, 25, 25)")
+
     # string
     ASSERT_EQ(countchar("AAA", "A"), 3, "countchar(...)");
     ASSERT_EQ(countchar("AAA", "B"), 0, "countchar(...)");
@@ -96,6 +105,7 @@ proc test {
     ASSERT_EQ(truncate("Hello world!", 12), "Hello world!", "1 shorten(...)");
     ASSERT_EQ(truncate("Hello world!", 11), "Hello ...", "2 shorten(...)");
     ASSERT_EQ(truncate("Hello world!", 10), "Hello...", "3 shorten(...)");
+    ASSERT_EQ(zfill("ABC", 6), "000ABC", "zfill(\"ABC\", 6)")
     # list
     split "5,3,1,2,4", ",";
     INSERTION_SORT(split);

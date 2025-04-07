@@ -39,6 +39,22 @@
 # Return `BASE` raised to the power of `EXP`.
 %define POW(BASE,EXP) antiln(ln(BASE)*(EXP))
 
+# Return the sign of `VALUE` (-1 when negative, 1 when positive, and 0 if 0)
+%define SIGN(VALUE) ((VALUE > 0) - (VALUE < 0))
+
+func safepow(base, exp) {
+    return POW(abs($base), $exp) * (2 * not($base < 0 and $exp % 2) - 1);
+}
+
+func atan2(y, x) {
+    # It is better to make it a function since it uses the arguments multiple times
+    # formula from https://en.wikipedia.org/wiki/Atan2
+    return 2 * atan((MAG($x, $y) - $x) / $y);
+}
+
+# Get the direction to (`X`, `Y`) from (`CX`, `CY`)
+%define DIR(X,Y,CX,CY) atan (((X)-(CX)) / ((Y)-(CY))) + 180 * ((CY) > (Y))
+
 # Gamma correct `VALUE` with power 2.2
 %define GAMMA(VALUE) antiln(ln(VALUE)/2.2)
 
