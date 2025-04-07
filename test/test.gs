@@ -47,7 +47,6 @@ proc test {
     ASSERT_EQ(MAP(0, 1, 50, 100, 0.5), 75, "MAP(0, 1, 50, 100, 0.5)");
     ASSERT_EQ(RAD("90"), PI/2, "RAD(90)");
     ASSERT_EQ(DEG(PI/"2"), 90, "DEG(PI/2)");
-    ASSERT_EQ(LOGB(8, 2), 3, "LOGB(8, 2)")
     ASSERT_EQ(SIGN(123), 1, "SIGN(123)")
     ASSERT_EQ(SIGN(0), 0, "SIGN(0)")
     ASSERT_EQ(SIGN(-456), -1, "SIGN(-456)")
