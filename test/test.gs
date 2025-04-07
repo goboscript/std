@@ -50,7 +50,7 @@ proc test {
     ASSERT_EQ(LOGB(8, 2), 3, "LOGB(8, 2)")
     ASSERT_EQ(SIGN(123), 1, "SIGN(123)")
     ASSERT_EQ(SIGN(0), 0, "SIGN(0)")
-    ASSERT_EQ(SIGN(-456), 1, "SIGN(-456)")
+    ASSERT_EQ(SIGN(-456), -1, "SIGN(-456)")
     ASSERT_EQ(safepow(3, 4), 81, "safepow(3, 4)")
     ASSERT_EQ(safepow(-3, 3), -27, "safepow(-3, 3)")
     ASSERT_EQ(safepow(4, -2), 0.0625, "safepow(4, -2)")
