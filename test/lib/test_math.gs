@@ -1,0 +1,36 @@
+proc test_math {
+    assert PI, 3.141592653589793, "PI";
+    assert E, 2.718281828459045, "E";
+    assert SQRT2, 1.4142135623730951, "SQRT2";
+    assert MIN(blackbox(100), blackbox(200)), 100, "MIN(100, 200)";
+    assert MIN(blackbox(200), blackbox(100)), 100, "MIN(200, 100)";
+    assert MIN(blackbox("-Infinity"), blackbox(0)), "-Infinity", "MIN(-Infinity, 0)";
+    assert MIN(blackbox("-Infinity"), blackbox("Infinity")), "-Infinity", "MIN(-Infinity, Infinity)";
+    assert MIN(blackbox(0), blackbox("Infinity")), 0, "MIN(0, Infinity)";
+    assert MAX(blackbox(100), blackbox(200)), 200, "MAX(100, 200)";
+    assert MAX(blackbox(200), blackbox(100)), 200, "MAX(200, 100)";
+    assert MAX(blackbox("-Infinity"), blackbox(0)), "0", "MAX(-Infinity, 0)";
+    assert MAX(blackbox("-Infinity"), blackbox("Infinity")), "Infinity", "MAX(-Infinity, Infinity)";
+    assert MAX(blackbox(0), blackbox("Infinity")), "Infinity", "MAX(0, Infinity)";
+    assert CLAMP(blackbox(50), blackbox(0), blackbox(100)), 50, "CLAMP(50, 0, 100)";
+    assert CLAMP(blackbox(-10), blackbox(0), blackbox(100)), 0, "CLAMP(-10, 0, 100)";
+    assert CLAMP(blackbox(150), blackbox(0), blackbox(100)), 100, "CLAMP(150, 0, 100)";
+    assert HEX(blackbox(0)), "0", "HEX(0)";
+    assert BIN(blackbox(0)), "0", "BIN(0)";
+    assert OCT(blackbox(0)), "0", "OCT(0)";
+    assert HEX(blackbox("FF")), 0xFF, "HEX(\"FF\")";
+    assert BIN(blackbox("11111111")), 0b11111111, "BIN(\"11111111\")";
+    assert OCT(blackbox("377")), 0o377, "OCT(\"377\")";
+    assert DIST(blackbox(0), blackbox(0), blackbox(3), blackbox(4)), 5, "DIST(0, 0, 3, 4)";
+    assert MAG(blackbox(3), blackbox(4)), 5, "MAG(3, 4)";
+    assert POW(blackbox(2), blackbox(3)), 7.999999999999998, "POW(2, 3)";
+    assert POW(blackbox(2), blackbox(-3)), 0.12500000000000003, "POW(2, -3)";
+    assert ROOT(blackbox(8), blackbox(3)), 2, "ROOT(8, 3)";
+    assert LOG(blackbox(8), blackbox(2)), 3, "LOG(8, 2)";
+    assert LERP(blackbox(0), blackbox(10), blackbox(0.5)), 5, "LERP(0, 10, 0.5)";
+    assert SIGN(blackbox(10)), 1, "SIGN(10)";
+    assert SIGN(blackbox(-10)), -1, "SIGN(-10)";
+    assert SIGN(blackbox(0)), 0, "SIGN(0)";
+    assert SIGN(blackbox("Infinity")), 1, "SIGN(Infinity)";
+    assert SIGN(blackbox("-Infinity")), -1, "SIGN(-Infinity)";
+}
