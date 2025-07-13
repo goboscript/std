@@ -62,6 +62,7 @@ func startswith(text, start) {
     return true;
 }
 
+# startswith_from(1, ...) is equivalent to startswith(...)
 func startswith_from(i, text, start) {
     local i = 1;
     repeat length $start {
@@ -84,6 +85,7 @@ func endswith(text, end) {
     return true;
 }
 
+# endswith_from(length <str>, <str>, ...) is equivalent to endswith(<str>, ...)
 func endswith_from(i, text, end) {
     local i = 0;
     repeat length $end {
