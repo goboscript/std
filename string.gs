@@ -115,6 +115,15 @@ func ljust(string, len, char = " ") {
     return ret;
 }
 
+# Pad ' ' to the right until it reaches the specified length.
+func rjust(string, len, char = " ") {
+    local ret = $string;
+    repeat $len - length $string {
+        ret &= $char;
+    }
+    return ret;
+}
+
 # repeat $string $times times (equivalent to int-string multiplication in python)
 func repstr(string, times) {
     local ret = "";
