@@ -12,4 +12,6 @@ proc test_string {
     assert repstr("a", 3), "aaa", "repstr(\"a\", 3)";
     assert rjust("FFF", 6), "FFF   ", "rjust(\"FFF\", 6)";
     assert rjust("FFF", 6, 0), "FFF000", "rjust(\"FFF\", 6, 1)";
+    assert slice("Hello, world", 2, 6), "ello", "slice(\"Hello, world\", 2, 6)";
+    assert slice_step("Hello, world", 5, 0, -2), "olH", "slice_step(\"Hello, world\", 5, 0, -2)";
 }
