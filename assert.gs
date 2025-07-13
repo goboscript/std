@@ -21,3 +21,10 @@ proc assert result, expected, message = "" {
     }    
 }
 %endif
+
+# assert true
+proc assert_t condition, message {
+    if not $condition {
+        error $message;
+    }
+}
