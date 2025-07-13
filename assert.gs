@@ -28,3 +28,9 @@ proc assert_t condition, message {
         error $message;
     }
 }
+# assert false
+proc assert_f condition, message {
+    if $condition {
+        error $message;
+    }
+}
