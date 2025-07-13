@@ -1,3 +1,13 @@
+%define WHITESPACE " \t\n\r"
+%define ASCII_LOWERCASE "abcdefghijklmnopqrstuvwxyz"
+%define ASCII_UPPERCASE "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+%define ASCII_LETTERS ASCII_LOWERCASE & ASCII_UPPERCASE
+%define DIGITS "0123456789"
+%define HEXDIGITS DIGITS & "abcdef" & "ABCDEF"
+%define OCTDIGITS "01234567"
+%define PUNCTUATION "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+%define PRINTABLE_CHARS DIGITS & ASCII_LETTERS & PUNCTUATION & WHITESPACE
+
 func strcmp(string1, string2) {
     # This code assumes you have costumes A-Z and a-z
     # If you need to compare chars e.g ä vs Ä, then you need to add those as costumes too

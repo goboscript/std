@@ -14,4 +14,14 @@ proc test_string {
     assert rjust("FFF", 6, 0), "FFF000", "rjust(\"FFF\", 6, 1)";
     assert slice("Hello, world", 2, 6), "ello", "slice(\"Hello, world\", 2, 6)";
     assert slice_step("Hello, world", 5, 0, -2), "olH", "slice_step(\"Hello, world\", 5, 0, -2)";
+
+    assert WHITESPACE, " \t\n\r", "WHITESPACE";
+    assert ASCII_LETTERS, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", "ASCII_LETTERS";
+    assert ASCII_LOWERCASE, "abcdefghijklmnopqrstuvwxyz", "ASCII_LOWERCASE";
+    assert ASCII_UPPERCASE, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ASCII_UPPERCASE";
+    assert DIGITS, "0123456789", "DIGITS";
+    assert HEXDIGITS, "0123456789abcdefABCDEF", "HEXDIGITS";
+    assert OCTDIGITS, "01234567", "OCTDIGITS";
+    assert PUNCTUATION, "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~", "PUNCTUATION";
+    assert PRINTABLE_CHARS, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n\r", "PRINTABLE_CHARS";
 }
