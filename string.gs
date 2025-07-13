@@ -105,3 +105,12 @@ func zfill(string, len) {
     }
     return ret;
 }
+
+# Pad ' ' to the left until it reaches the specified length.
+func ljust(string, len, char = " ") {
+    local ret = $string;
+    repeat $len - length $string {
+        ret = $char & ret;
+    }
+    return ret;
+}

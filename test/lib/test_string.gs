@@ -7,4 +7,6 @@ proc test_string {
     assert_t endswith("Hello, World!", "World!"), "endswith(\"Hello, World!\", \"World!\")";
     assert_t endswith_from(6, "Hello, World!", "Hello,"), "endswith_from(6, \"Hello, World!\", \"Hello,\")";
     assert zfill("FFF", 6), "000FFF", "zfill(\"FFF\", 6)";
+    assert ljust("FFF", 6), "   FFF", "ljust(\"FFF\", 6)";
+    assert ljust("FFF", 6, 1), "111FFF", "ljust(\"FFF\", 6, 1)";
 }
