@@ -96,3 +96,12 @@ func endswith_from(i, string, end) {
     }
     return true;
 }
+
+# Pad '0' to the left until it reaches the specified length.
+func zfill(string, len) {
+    local ret = $string;
+    repeat $len - length $string {
+        ret = 0 & ret;
+    }
+    return ret;
+}
