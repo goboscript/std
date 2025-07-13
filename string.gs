@@ -114,3 +114,12 @@ func ljust(string, len, char = " ") {
     }
     return ret;
 }
+
+# repeat $string $times times (equivalent to int-string multiplication in python)
+func repstr(string, times) {
+    local ret = "";
+    repeat $times {
+        ret &= $string;
+    }
+    return ret;
+}

@@ -9,4 +9,5 @@ proc test_string {
     assert zfill("FFF", 6), "000FFF", "zfill(\"FFF\", 6)";
     assert ljust("FFF", 6), "   FFF", "ljust(\"FFF\", 6)";
     assert ljust("FFF", 6, 1), "111FFF", "ljust(\"FFF\", 6, 1)";
+    assert repstr("a", 3), "aaa", "repstr(\"a\", 3)";
 }
