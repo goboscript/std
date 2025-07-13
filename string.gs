@@ -51,10 +51,10 @@ func slice_step(string, start, end, step) {
     }
 }
 
-func startswith(text, start) {
+func startswith(string, start) {
     local i = 1;
     repeat length $start {
-        if $text[i] != $start[i] {
+        if $string[i] != $start[i] {
             return false;
         }
         i++;
@@ -63,10 +63,10 @@ func startswith(text, start) {
 }
 
 # startswith_from(1, ...) is equivalent to startswith(...)
-func startswith_from(i, text, start) {
+func startswith_from(i, string, start) {
     local i = 1;
     repeat length $start {
-        if $text[i + $i - 1] != $start[i] {
+        if $string[i + $i - 1] != $start[i] {
             return false;
         }
         i++;
@@ -74,10 +74,10 @@ func startswith_from(i, text, start) {
     return true;
 }
 
-func endswith(text, end) {
+func endswith(string, end) {
     local i = 0;
     repeat length $end {
-        if $text[length $text - i] != $end[length $end - i] {
+        if $string[length $string - i] != $end[length $end - i] {
             return false;
         }
         i++;
@@ -86,10 +86,10 @@ func endswith(text, end) {
 }
 
 # endswith_from(length <str>, <str>, ...) is equivalent to endswith(<str>, ...)
-func endswith_from(i, text, end) {
+func endswith_from(i, string, end) {
     local i = 0;
     repeat length $end {
-        if $text[$i - i] != $end[length $end - i] {
+        if $string[$i - i] != $end[length $end - i] {
             return false;
         }
         i++;
