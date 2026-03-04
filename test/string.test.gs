@@ -213,6 +213,22 @@ proc test {
     expect "str_count_char('hello', 'aeiou')", str_count_char("hello", "aeiou"), to_be: "2";
 
     # =========================================================================
+    # str_count
+    # =========================================================================
+
+    expect "str_count('this is it', 'is')",  str_count("this is it", "is"),  to_be: "2";
+    expect "str_count('aaaa', 'aa')",        str_count("aaaa", "aa"),        to_be: "2";
+    expect "str_count('banana', 'an')",      str_count("banana", "an"),      to_be: "2";
+    expect "str_count('hello', 'xyz')",      str_count("hello", "xyz"),      to_be: "0";
+    expect "str_count('abc', '')",           str_count("abc", ""),           to_be: "4";
+    expect "str_count('hello', 'l')",        str_count("hello", "l"),        to_be: "2";
+    expect "str_count('hello', 'o')",        str_count("hello", "o"),        to_be: "1";
+    expect "str_count('aaaaa', 'aaa')",     str_count("aaaaa", "aaa"),     to_be: "1";
+    expect "str_count('', 'a')",              str_count("", "a"),              to_be: "0";
+    expect "str_count('', '')",               str_count("", ""),               to_be: "1";
+    expect "str_count('aaa', 'aa')",         str_count("aaa", "aa"),         to_be: "1";
+
+    # =========================================================================
     # str_lstrip
     # =========================================================================
 
