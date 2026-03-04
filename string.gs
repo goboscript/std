@@ -731,4 +731,36 @@ func str_find(text, subtext) {
     return 0;
 }
 
+# Returns a copy of $text centered in a string of length $width.
+# If $width is less than or equal to the length of $text, a copy of
+# $text is returned unchanged. The default fill character is a space.
+#
+# @param {string} text     - The string to center.
+# @param {number} width    - The total width of the resulting string.
+# @param {string} fillchar - The character to use for padding (default: " ").
+# @returns {string} The centered string.
+#
+# @example str_center("hello", 10)       => "  hello  "
+# @example str_center("hello", 10, "-") => "--hello--"
+# @example str_center("hello", 5)        => "hello"
+func str_center(text, width, fillchar=" ") {
+    if $width <= length($text) {
+        return $text;
+    }
+    local total_padding = $width - length($text);
+    local left_padding = total_padding // 2;
+    local right_padding = total_padding - left_padding;
+    delete strbuf;
+    repeat left_padding {
+        add $fillchar to strbuf;
+    }
+    repeat length($text) {
+        add $text[1 + length(strbuf) - left_padding] to strbuf;
+    }
+    repeat right_padding {
+        add $fillchar to strbuf;
+    }
+    return strbuf;
+}
+
 %undef strbuf

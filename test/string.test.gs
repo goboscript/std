@@ -390,4 +390,20 @@ proc test {
     expect "str_find('', 'a')",                 str_find("", "a"),                 to_be: "0";
     expect "str_find('abcabc', 'bc')",          str_find("abcabc", "bc"),          to_be: "2";
     expect "str_find('hello', 'o')",            str_find("hello", "o"),            to_be: "5";
+
+    # =========================================================================
+    # str_center
+    # =========================================================================
+
+    expect "str_center('hello', 10)",       str_center("hello", 10),       to_be: "  hello  ";
+    expect "str_center('hello', 10, '-')",   str_center("hello", 10, "-"),   to_be: "--hello--";
+    expect "str_center('hello', 5)",         str_center("hello", 5),         to_be: "hello";
+    expect "str_center('hello', 6)",         str_center("hello", 6),         to_be: " hello";
+    expect "str_center('hello', 7)",         str_center("hello", 7),         to_be: " hello ";
+    expect "str_center('', 5)",              str_center("", 5),              to_be: "     ";
+    expect "str_center('a', 5)",             str_center("a", 5),             to_be: "  a  ";
+    expect "str_center('ab', 5)",            str_center("ab", 5),            to_be: " ab ";
+    expect "str_center('abc', 5)",           str_center("abc", 5),           to_be: " abc";
+    expect "str_center('x', 1)",             str_center("x", 1),             to_be: "x";
+    expect "str_center('x', 0)",             str_center("x", 0),             to_be: "x";
 }
