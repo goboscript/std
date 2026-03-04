@@ -763,4 +763,44 @@ func str_center(text, width, fillchar=" ") {
     return strbuf;
 }
 
+# Counts the number of non-overlapping occurrences of $sub in $text.
+#   - returns 0 if $sub is not found
+#   - returns length($text) + 1 for an empty $sub
+#
+# @param {string} text - The string to search within.
+# @param {string} sub  - The substring to count.
+# @returns {number} The number of non-overlapping occurrences.
+#
+# @example str_count("this is it", "is")  => 2
+# @example str_count("aaaa", "aa")        => 2
+# @example str_count("banana", "an")      => 2
+# @example str_count("hello", "xyz")      => 0
+# @example str_count("abc", "")           => 4
+func str_count(text, sub) {
+    local count = 0;
+    local i = 1;
+    local j = 0;
+    local candidate = "";
+
+    if length($sub) == 0 {
+        return length($text) + 1;
+    }
+
+    until i > length($text) - length($sub) + 1 {
+        candidate = "";
+        j = 0;
+        repeat length($sub) {
+            j++;
+            candidate &= $text[i + j - 1];
+        }
+        if candidate == $sub {
+            count++;
+            i += length($sub);
+        } else {
+            i++;
+        }
+    }
+    return count;
+}
+
 %undef strbuf
