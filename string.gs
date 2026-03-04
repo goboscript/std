@@ -763,6 +763,58 @@ func str_center(text, width, fillchar=" ") {
     return strbuf;
 }
 
+# Returns a copy of $text left-justified in a string of length $width.
+# The string is padded on the right with $fillchar. If $width is less
+# than or equal to the length of $text, a copy of $text is returned unchanged.
+#
+# @param {string} text     - The string to left-justify.
+# @param {number} width    - The total width of the resulting string.
+# @param {string} fillchar - The character to use for padding (default: " ").
+# @returns {string} The left-justified string.
+#
+# @example str_ljust("hello", 10)       => "hello     "
+# @example str_ljust("hello", 10, "-")  => "hello-----"
+# @example str_ljust("hello", 5)        => "hello"
+func str_ljust(text, width, fillchar=" ") {
+    if $width <= length($text) {
+        return $text;
+    }
+    delete strbuf;
+    repeat length($text) {
+        add $text[1 + length(strbuf)] to strbuf;
+    }
+    repeat $width - length($text) {
+        add $fillchar to strbuf;
+    }
+    return strbuf;
+}
+
+# Returns a copy of $text right-justified in a string of length $width.
+# The string is padded on the left with $fillchar. If $width is less
+# than or equal to the length of $text, a copy of $text is returned unchanged.
+#
+# @param {string} text     - The string to right-justify.
+# @param {number} width   - The total width of the resulting string.
+# @param {string} fillchar - The character to use for padding (default: " ").
+# @returns {string} The right-justified string.
+#
+# @example str_rjust("hello", 10)       => "     hello"
+# @example str_rjust("hello", 10, "-") => "-----hello"
+# @example str_rjust("hello", 5)       => "hello"
+func str_rjust(text, width, fillchar=" ") {
+    if $width <= length($text) {
+        return $text;
+    }
+    delete strbuf;
+    repeat $width - length($text) {
+        add $fillchar to strbuf;
+    }
+    repeat length($text) {
+        add $text[1 + length(strbuf) - ($width - length($text))] to strbuf;
+    }
+    return strbuf;
+}
+
 # Counts the number of non-overlapping occurrences of $sub in $text.
 #   - returns 0 if $sub is not found
 #   - returns length($text) + 1 for an empty $sub

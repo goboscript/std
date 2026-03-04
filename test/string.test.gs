@@ -422,4 +422,28 @@ proc test {
     expect "str_center('abc', 5)",           str_center("abc", 5),           to_be: " abc";
     expect "str_center('x', 1)",             str_center("x", 1),             to_be: "x";
     expect "str_center('x', 0)",             str_center("x", 0),             to_be: "x";
+
+    # =========================================================================
+    # str_ljust
+    # =========================================================================
+
+    expect "str_ljust('hello', 10)",       str_ljust("hello", 10),       to_be: "hello     ";
+    expect "str_ljust('hello', 10, '-')",  str_ljust("hello", 10, "-"),  to_be: "hello-----";
+    expect "str_ljust('hello', 5)",        str_ljust("hello", 5),        to_be: "hello";
+    expect "str_ljust('hello', 7)",        str_ljust("hello", 7),        to_be: "hello  ";
+    expect "str_ljust('hello', 3)",        str_ljust("hello", 3),        to_be: "hello";
+    expect "str_ljust('', 5)",             str_ljust("", 5),             to_be: "     ";
+    expect "str_ljust('a', 5)",           str_ljust("a", 5),           to_be: "a    ";
+
+    # =========================================================================
+    # str_rjust
+    # =========================================================================
+
+    expect "str_rjust('hello', 10)",       str_rjust("hello", 10),       to_be: "     hello";
+    expect "str_rjust('hello', 10, '-')",  str_rjust("hello", 10, "-"),  to_be: "-----hello";
+    expect "str_rjust('hello', 5)",        str_rjust("hello", 5),        to_be: "hello";
+    expect "str_rjust('hello', 7)",        str_rjust("hello", 7),        to_be: "  hello";
+    expect "str_rjust('hello', 3)",        str_rjust("hello", 3),        to_be: "hello";
+    expect "str_rjust('', 5)",             str_rjust("", 5),             to_be: "     ";
+    expect "str_rjust('a', 5)",           str_rjust("a", 5),           to_be: "    a";
 }
