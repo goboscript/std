@@ -53,3 +53,20 @@ func or16(a, b) {
 func or32(a, b) {
     return or16($a//0x10000, $b//0x10000)*0x10000 + or16($a%0x10000, $b%0x10000);
 }
+
+%define NOT4(A) XOR4((A), 0xF)
+%define NOT8(A) XOR8((A), 0xFF)
+%define NOT16(A) XOR16((A), 0xFFFF)
+%define NOT32(A) XOR32((A), 0xFFFFFFFF)
+
+func not8(a) {
+    return xor8($a, 0xFF);
+}
+
+func not16(a) {
+    return xor16($a, 0xFFFF);
+}
+
+func not32(a) {
+    return xor32($a, 0xFFFFFFFF);
+}
