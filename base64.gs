@@ -55,15 +55,6 @@ func base64_encode(charset) {
     return base64_strbuf;
 }
 
-proc base64_buffer_append data {
-    local i = 1;
-    repeat length($data) {
-        switch_costume $data[i];
-        add 31 + costume_number() to base64_buffer;
-        i++;
-    }
-}
-
 # Decode base64 string $data into base64_buffer.
 # Call base64_build_lut with the appropriate charset before calling this.
 # Appends decoded bytes to base64_buffer (clear it first if needed).
@@ -114,18 +105,4 @@ proc base64_decode data {
         # Byte 3: low 2 bits of v2, all 6 bits of v3
         add (v2 % 4) * 64 + v3 to base64_buffer;
     }
-}
-
-# Convert raw byte values in base64_buffer back to a string.
-# base64_buffer_append stores: costume_number('x') + 31 = raw ASCII byte
-# Reverse: switch_costume (byte - 31) gives the costume named that char -> costume_name()
-func base64_buffer_to_str() {
-    local result = "";
-    local i = 1;
-    repeat length(base64_buffer) {
-        switch_costume base64_buffer[i] - 31;
-        result &= costume_name();
-        i++;
-    }
-    return result;
 }

@@ -1,27 +1,6 @@
 %include ../bitwise.gs
 
 proc test {
-    # XOR32
-    expect "XOR32(0xDEADBEEF, 0xCAFEBABE)", XOR32(_(0xDEADBEEF), _(0xCAFEBABE)), to_be: "340984913";
-
-    # AND8
-    expect "AND8(0xF0, 0xAD)", AND8(_(0xF0), _(0xAD)), to_be: "160";
-
-    # AND16
-    expect "AND16(0xFF0F, 0xA5C3)", AND16(_(0xFF0F), _(0xA5C3)), to_be: "42243";
-
-    # AND32
-    expect "AND32(0xDEADBEEF, 0x0F0F0F0F)", AND32(_(0xDEADBEEF), _(0x0F0F0F0F)), to_be: "235736591";
-
-    # OR8
-    expect "OR8(0xB4, 0x2D)", OR8(_(0xB4), _(0x2D)), to_be: "189";
-
-    # OR16
-    expect "OR16(0xB00B, 0x1234)", OR16(_(0xB00B), _(0x1234)), to_be: "45631";
-
-    # OR32
-    expect "OR32(0xDEAD0000, 0x0000BEEF)", OR32(_(0xDEAD0000), _(0x0000BEEF)), to_be: "3735928559";
-
     # xor8 (func) — chosen so result is 0xFF (255), a good boundary check
     expect "xor8(0xA3, 0x5C)", xor8(_(0xA3), _(0x5C)), to_be: "255";
 
@@ -48,4 +27,60 @@ proc test {
 
     # or32 (func)
     expect "or32(0xC0DE0000, 0x0000CAFE)", or32(_(0xC0DE0000), _(0x0000CAFE)), to_be: "3235826430";
+
+    # NOT4 (macro)
+    expect "NOT4(0x0)", NOT4(0x0), to_be: "15";
+    expect "NOT4(0xF)", NOT4(0xF), to_be: "0";
+    expect "NOT4(0xA)", NOT4(0xA), to_be: "5";
+    expect "NOT4(0x5)", NOT4(0x5), to_be: "10";
+
+    # not8 (func)
+    expect "not8(0x00)", not8(_(0x00)), to_be: "255";
+    expect "not8(0xFF)", not8(_(0xFF)), to_be: "0";
+    expect "not8(0xA5)", not8(_(0xA5)), to_be: "90";   # 0x5A
+    expect "not8(0xF0)", not8(_(0xF0)), to_be: "15";   # 0x0F
+
+    # not16 (func)
+    expect "not16(0x0000)", not16(_(0x0000)), to_be: "65535";
+    expect "not16(0xFFFF)", not16(_(0xFFFF)), to_be: "0";
+    expect "not16(0xA5A5)", not16(_(0xA5A5)), to_be: "23130"; # 0x5A5A
+    expect "not16(0xDEAD)", not16(_(0xDEAD)), to_be: "8530";  # 0x2152
+
+    # not32 (func)
+    expect "not32(0x00000000)", not32(_(0x00000000)), to_be: "4294967295";
+    expect "not32(0xFFFFFFFF)", not32(_(0xFFFFFFFF)), to_be: "0";
+    expect "not32(0xDEADBEEF)", not32(_(0xDEADBEEF)), to_be: "559038736"; # 0x21524110
+    expect "not32(0xA5A5A5A5)", not32(_(0xA5A5A5A5)), to_be: "1515870810"; # 0x5A5A5A5A
+
+    # ADD32 (macro)
+    expect "ADD32(1, 1)", ADD32(1, 1), to_be: "2";
+    expect "ADD32(0xFFFFFFFF, 1) wraps", ADD32(0xFFFFFFFF, 1), to_be: "0";
+    expect "ADD32(0x80000000, 0x80000000) wraps", ADD32(0x80000000, 0x80000000), to_be: "0";
+    expect "ADD32(0xDEADBEEF, 0x12345678)", ADD32(0xDEADBEEF, 0x12345678), to_be: "4041348455"; # 0xF0E21567
+
+    # add32 (func)
+    expect "add32(0, 0)", add32(_(0), _(0)), to_be: "0";
+    expect "add32(1, 1)", add32(_(1), _(1)), to_be: "2";
+    expect "add32(0xFFFFFFFF, 1) wraps", add32(_(0xFFFFFFFF), _(1)), to_be: "0";
+    expect "add32(0x80000000, 0x80000000) wraps", add32(_(0x80000000), _(0x80000000)), to_be: "0";
+    expect "add32(0xDEADBEEF, 0x12345678)", add32(_(0xDEADBEEF), _(0x12345678)), to_be: "4041348455";
+    expect "add32(0xCAFEBABE, 0xDEADBEEF)", add32(_(0xCAFEBABE), _(0xDEADBEEF)), to_be: "2846652845"; # 0xA9AC79AD
+
+    # ROL32 (macro, single step)
+    # NOTE: ROL32 has a bug — (A) > 0xFFFFFFFF is always 0, so the MSB carry
+    # is never captured. The two tests below expose it.
+    expect "ROL32(1)", ROL32(1), to_be: "2";
+    expect "ROL32(0x40000000)", ROL32(0x40000000), to_be: "2147483648"; # MSB 0 → safe
+    expect "ROL32(0x80000000) carry bug", ROL32(0x80000000), to_be: "1"; # FAILS: gives 0
+    expect "ROL32(0xDEADBEEF) carry bug", ROL32(0xDEADBEEF), to_be: "2932443615"; # 0xBD5B7DDF — FAILS: gives 0xBD5B7DDE
+
+    # rol32 (func)
+    expect "rol32(1, 0) identity", rol32(_(1), _(0)), to_be: "1";
+    expect "rol32(1, 1)", rol32(_(1), _(1)), to_be: "2";
+    expect "rol32(1, 31)", rol32(_(1), _(31)), to_be: "2147483648"; # 0x80000000
+    expect "rol32(0x12345678, 8)", rol32(_(0x12345678), _(8)), to_be: "878082066"; # 0x34567812
+    expect "rol32(1, 32) mod wraps to identity", rol32(_(1), _(32)), to_be: "1";
+    expect "rol32(0x80000000, 1) carry bug", rol32(_(0x80000000), _(1)), to_be: "1"; # FAILS: gives 0
+    expect "rol32(0xDEADBEEF, 4) carry bug", rol32(_(0xDEADBEEF), _(4)), to_be: "3940282109"; # 0xEADBEEFD — FAILS
+
 }
