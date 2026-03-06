@@ -1,121 +1,282 @@
-# Sort `LIST` in ascending order using the insertion sorting algorithm.
-%define INSERTION_SORT(LIST)                                                           \
-    local i = 2;                                                                       \
-    until i > length(LIST) {                                                           \
-        local isx = LIST[i];                                                           \
-        local j = i;                                                                   \
-        until j <= 1 or LIST[j - 1] <= isx {                                           \
-            LIST[j] = LIST[j - 1];                                                     \
+%define LIST_SORT(LIST)                                                                \
+    local start = $start;                                                              \
+    local end = $end;                                                                  \
+    if start < 0 {                                                                     \
+        start = length(LIST) + start + 1;                                              \
+    }                                                                                  \
+    if end < 0 {                                                                       \
+        end = length(LIST) + end + 1;                                                  \
+    }                                                                                  \
+    local i = start + 1;                                                               \
+    until i > end {                                                                    \
+        local key = LIST[i];                                                           \
+        local j = i - 1;                                                               \
+        until j < start or LIST[j] <= key {                                            \
+            LIST[j + 1] = LIST[j];                                                     \
             j--;                                                                       \
         }                                                                              \
-        LIST[j] = isx;                                                                 \
+        LIST[j + 1] = key;                                                             \
         i++;                                                                           \
     }
 
-# Sort `LIST` of type `TYPE` in ascending order of the value of `FIELD` using the
-# insertion sorting algorithm.
-%define INSERTION_SORT_BY_FIELD(TYPE,LIST,FIELD)                                       \
-    local i = 2;                                                                       \
-    until i > length(LIST) {                                                           \
-        local TYPE isfx = LIST[i];                                                     \
-        local j = i;                                                                   \
-        until j <= 1 or LIST[j - 1]FIELD <= isfx FIELD {                               \
-            LIST[j] = LIST[j - 1];                                                     \
+%define LIST_SORT(LIST, TYPE, KEY)                                                     \
+    local start = $start;                                                              \
+    local end = $end;                                                                  \
+    if start < 0 {                                                                     \
+        start = length(LIST) + start + 1;                                              \
+    }                                                                                  \
+    if end < 0 {                                                                       \
+        end = length(LIST) + end + 1;                                                  \
+    }                                                                                  \
+    local i = start + 1;                                                               \
+    until i > end {                                                                    \
+        local TYPE key = LIST[i];                                                      \
+        local j = i - 1;                                                               \
+        until j < start or LIST[j].KEY <= key.KEY {                                    \
+            LIST[j + 1] = LIST[j];                                                     \
             j--;                                                                       \
         }                                                                              \
-        LIST[j] = isfx;                                                                \
+        LIST[j + 1] = key;                                                             \
         i++;                                                                           \
     }
 
-# Count the number of elements in `LIST` that satisfy `CMP`, and store the result in
-# `STORE`. local `i` is the index of the current element.
-%define COUNT(LIST,CMP,STORE)                                                          \
-    local STORE = 0;                                                                   \
-    local i = 1;                                                                       \
-    repeat length(LIST) {                                                              \
-        if CMP {                                                                       \
-            STORE += 1;                                                                \
+%define LIST_JOIN(LIST)                                                                \
+    local start = $start;                                                              \
+    local end = $end;                                                                  \
+    if start < 0 {                                                                     \
+        start = length(LIST) + start + 1;                                              \
+    }                                                                                  \
+    if end < 0 {                                                                       \
+        end = length(LIST) + end + 1;                                                  \
+    }                                                                                  \
+    local out = "";                                                                    \
+    local i = start;                                                                   \
+    repeat end - start + 1 {                                                           \
+        if i != start {                                                                \
+            out &= $sep;                                                               \
+        }                                                                              \
+        out &= LIST[i];                                                                \
+        i++;                                                                           \
+    }                                                                                  \
+    return out;
+
+%define LIST_JOIN(LIST, KEY)                                                           \
+    local start = $start;                                                              \
+    local end = $end;                                                                  \
+    if start < 0 {                                                                     \
+        start = length(LIST) + start + 1;                                              \
+    }                                                                                  \
+    if end < 0 {                                                                       \
+        end = length(LIST) + end + 1;                                                  \
+    }                                                                                  \
+    local out = "";                                                                    \
+    local i = start;                                                                   \
+    repeat end - start + 1 {                                                           \
+        if i != start {                                                                \
+            out &= $sep;                                                               \
+        }                                                                              \
+        out &= LIST[i].KEY;                                                            \
+        i++;                                                                           \
+    }                                                                                  \
+    return out;
+
+%define LIST_SUM(LIST)                                                                 \
+    local start = $start;                                                              \
+    local end = $end;                                                                  \
+    if start < 0 {                                                                     \
+        start = length(LIST) + start + 1;                                              \
+    }                                                                                  \
+    if end < 0 {                                                                       \
+        end = length(LIST) + end + 1;                                                  \
+    }                                                                                  \
+    local out = 0;                                                                     \
+    local i = start;                                                                   \
+    repeat end - start + 1 {                                                           \
+        out += LIST[i];                                                                \
+        i++;                                                                           \
+    }                                                                                  \
+    return out;
+
+%define LIST_SUM(LIST, KEY)                                                            \
+    local start = $start;                                                              \
+    local end = $end;                                                                  \
+    if start < 0 {                                                                     \
+        start = length(LIST) + start + 1;                                              \
+    }                                                                                  \
+    if end < 0 {                                                                       \
+        end = length(LIST) + end + 1;                                                  \
+    }                                                                                  \
+    local out = 0;                                                                     \
+    local i = start;                                                                   \
+    repeat end - start + 1 {                                                           \
+        out += LIST[i].KEY;                                                            \
+        i++;                                                                           \
+    }                                                                                  \
+    return out;
+
+%define LIST_MIN(LIST)                                                                 \
+    local start = $start;                                                              \
+    local end = $end;                                                                  \
+    if start < 0 {                                                                     \
+        start = length(LIST) + start + 1;                                              \
+    }                                                                                  \
+    if end < 0 {                                                                       \
+        end = length(LIST) + end + 1;                                                  \
+    }                                                                                  \
+    local out = 1/0;                                                                   \
+    local i = start;                                                                   \
+    repeat end - start + 1 {                                                           \
+        if LIST[i] < out {                                                             \
+            out = LIST[i];                                                             \
         }                                                                              \
         i++;                                                                           \
-    }
+    }                                                                                  \
+    return out;
 
-# Sum the elements in `LIST` that satisfy `CMP`, and store the result in `STORE`.
-# local `i` is the index of the current element.
-%define SUM(LIST,CMP,STORE)                                                            \
-    local STORE = 0;                                                                   \
-    local i = 1;                                                                       \
-    repeat length(LIST) {                                                              \
-        if CMP {                                                                       \
-            STORE += LIST[i];                                                          \
+%define LIST_MIN(LIST, KEY)                                                            \
+    local start = $start;                                                              \
+    local end = $end;                                                                  \
+    if start < 0 {                                                                     \
+        start = length(LIST) + start + 1;                                              \
+    }                                                                                  \
+    if end < 0 {                                                                       \
+        end = length(LIST) + end + 1;                                                  \
+    }                                                                                  \
+    local out = 1/0;                                                                   \
+    local i = start;                                                                   \
+    repeat end - start + 1 {                                                           \
+        if LIST[i].KEY < out {                                                         \
+            out = LIST[i].KEY;                                                         \
         }                                                                              \
         i++;                                                                           \
-    }
+    }                                                                                  \
+    return out;
 
-# Find the largest element in `LIST` that satisfies `CMP`, and store the result in
-# `STORE`. local `i` is the index of the current element.
-%define FINDMAX(LIST,CMP,STORE)                                                        \
-    local STORE = "-Infinity";                                                         \
-    local i = 1;                                                                       \
-    repeat length(LIST) {                                                              \
-        if CMP {                                                                       \
-            if LIST[i] > STORE {                                                       \
-                STORE = LIST[i];                                                       \
-            }                                                                          \
+%define LIST_MAX(LIST)                                                                 \
+    local start = $start;                                                              \
+    local end = $end;                                                                  \
+    if start < 0 {                                                                     \
+        start = length(LIST) + start + 1;                                              \
+    }                                                                                  \
+    if end < 0 {                                                                       \
+        end = length(LIST) + end + 1;                                                  \
+    }                                                                                  \
+    local out = -1/0;                                                                  \
+    local i = start;                                                                   \
+    repeat end - start + 1 {                                                           \
+        if LIST[i] > out {                                                             \
+            out = LIST[i];                                                             \
         }                                                                              \
         i++;                                                                           \
-    }
+    }                                                                                  \
+    return out;
 
-# Find the smallest element in `LIST` that satisfies `CMP`, and store the result in
-# `STORE`. local `i` is the index of the current element.
-%define FINDMIN(LIST,CMP,STORE)                                                        \
-    local STORE = "Infinity";                                                          \
-    local i = 1;                                                                       \
-    repeat length(LIST) {                                                              \
-        if CMP {                                                                       \
-            if LIST[i] < STORE {                                                       \
-                STORE = LIST[i];                                                       \
-            }                                                                          \
+%define LIST_MAX(LIST, KEY)                                                            \
+    local start = $start;                                                              \
+    local end = $end;                                                                  \
+    if start < 0 {                                                                     \
+        start = length(LIST) + start + 1;                                              \
+    }                                                                                  \
+    if end < 0 {                                                                       \
+        end = length(LIST) + end + 1;                                                  \
+    }                                                                                  \
+    local out = -1/0;                                                                  \
+    local i = start;                                                                   \
+    repeat end - start + 1 {                                                           \
+        if LIST[i].KEY > out {                                                         \
+            out = LIST[i].KEY;                                                         \
         }                                                                              \
         i++;                                                                           \
+    }                                                                                  \
+    return out;
+
+%define LIST_REVERSE(LIST)                                                             \
+    local lo = $start;                                                                 \
+    local hi = $end;                                                                   \
+    if lo < 0 {                                                                        \
+        lo = length(LIST) + lo + 1;                                                    \
+    }                                                                                  \
+    if hi < 0 {                                                                        \
+        hi = length(LIST) + hi + 1;                                                    \
+    }                                                                                  \
+    until lo >= hi {                                                                   \
+        local tmp = LIST[lo];                                                          \
+        LIST[lo] = LIST[hi];                                                           \
+        LIST[hi] = tmp;                                                                \
+        lo++;                                                                          \
+        hi--;                                                                          \
     }
 
-# Reverse `LIST` in place.
-%define REVERSE(LIST)                                                                  \
-    local i = 1;                                                                       \
-    local j = length(LIST);                                                            \
-    repeat length(LIST) / 2 {                                                          \
-        local x = LIST[i];                                                             \
-        LIST[i] = LIST[j];                                                             \
-        LIST[j] = x;                                                                   \
+%define LIST_REVERSE(TYPE, LIST)                                                       \
+    local lo = $start;                                                                 \
+    local hi = $end;                                                                   \
+    if lo < 0 {                                                                        \
+        lo = length(LIST) + lo + 1;                                                    \
+    }                                                                                  \
+    if hi < 0 {                                                                        \
+        hi = length(LIST) + hi + 1;                                                    \
+    }                                                                                  \
+    until lo >= hi {                                                                   \
+        local TYPE tmp = LIST[lo];                                                     \
+        LIST[lo] = LIST[hi];                                                           \
+        LIST[hi] = tmp;                                                                \
+        lo++;                                                                          \
+        hi--;                                                                          \
+    }
+
+%define LIST_COPY(SRC, DST)                                                            \
+    local start = $start;                                                              \
+    local end = $end;                                                                  \
+    if start < 0 {                                                                     \
+        start = length(SRC) + start + 1;                                               \
+    }                                                                                  \
+    if end < 0 {                                                                       \
+        end = length(SRC) + end + 1;                                                   \
+    }                                                                                  \
+    local i = start;                                                                   \
+    repeat end - start + 1 {                                                           \
+        add SRC[i] to DST;                                                             \
         i++;                                                                           \
-        j--;                                                                           \
     }
 
-# Copy `SRC` to `DEST`.
-%define COPY(SRC,DEST)                                                                 \
-    delete DEST;                                                                       \
+%define LIST_EXTEND(SRC, DST)                                                          \
     local i = 1;                                                                       \
-    repeat length(SRC) {                                                               \
-        add SRC[i] to DEST;                                                            \
+    repeat length SRC {                                                                \
+        add SRC[i] to DST;                                                             \
         i++;                                                                           \
     }
 
-# Extend `DEST` with the elements of `SRC`.
-%define EXTEND(SRC,DEST)                                                               \
-    local i = 1;                                                                       \
-    repeat length(SRC) {                                                               \
-        add SRC[i] to DEST;                                                            \
+%define LIST_EXTEND(SRC, DST)                                                          \
+    local start = $start;                                                              \
+    local end = $end;                                                                  \
+    if start < 0 {                                                                     \
+        start = length(SRC) + start + 1;                                               \
+    }                                                                                  \
+    if end < 0 {                                                                       \
+        end = length(SRC) + end + 1;                                                   \
+    }                                                                                  \
+    local i = start;                                                                   \
+    repeat end - start + 1 {                                                           \
+        add SRC[i] to DST;                                                             \
         i++;                                                                           \
     }
 
-# Remove duplicate elements from `LIST`.
-%define UNIQUE(LIST)                                                                   \
-    local i = 1;                                                                       \
-    until i > length(LIST) {                                                           \
+%define LIST_UNIQUE(LIST)                                                              \
+    local start = $start;                                                              \
+    local end_ = $end;                                                                 \
+    if start < 0 {                                                                     \
+        start = length(LIST) + start + 1;                                              \
+    }                                                                                  \
+    if end_ < 0 {                                                                      \
+        end_ = length(LIST) + end_ + 1;                                                \
+    }                                                                                  \
+    local i = start;                                                                   \
+    until i > end_ {                                                                   \
         local j = i + 1;                                                               \
-        until j > length(LIST) {                                                       \
+        until j > end_ {                                                               \
             if LIST[i] == LIST[j] {                                                    \
                 delete LIST[j];                                                        \
+                end_--;                                                                \
             } else {                                                                   \
                 j++;                                                                   \
             }                                                                          \
@@ -123,57 +284,22 @@
         i++;                                                                           \
     }
 
-# Sum the field `FIELD` in `LIST` that satisfy `CMP`, and store the result in `STORE`.
-%define SUM_BY_FIELD(LIST,FIELD,CMP,STORE)                                             \
-    local STORE = 0;                                                                   \
-    local i = 1;                                                                       \
-    repeat length(LIST) {                                                              \
-        if CMP {                                                                       \
-            STORE += LIST[i]FIELD;                                                     \
-        }                                                                              \
-        i++;                                                                           \
-    }
-
-# TODO [BLOCKED BY]: https://github.com/aspizu/goboscript/issues/71
-# Find the largest `FIELD` value in `LIST` of type `TYPE` that satisfies `CMP` and store
-# the result in `STORE`.
-%define FINDMAX_BY_FIELD(TYPE,LIST,FIELD,CMP,STORE)                                    \
-    local TYPE STORE;                                                                  \
-    STORE FIELD = "-Infinity";                                                         \
-    local i = 1;                                                                       \
-    repeat length(LIST) {                                                              \
-        if CMP {                                                                       \
-            if LIST[i]FIELD > STORE FIELD {                                            \
-                STORE = LIST[i];                                                       \
-            }                                                                          \
-        }                                                                              \
-        i++;                                                                           \
-    }
-
-# TODO [BLOCKED BY]: https://github.com/aspizu/goboscript/issues/71
-# Find the smallest `FIELD` value in `LIST` of type `TYPE` that satisfies `CMP` and
-# store the result in `STORE`.
-%define FINDMIN_BY_FIELD(TYPE,LIST,FIELD,CMP,STORE)                                    \
-    local TYPE STORE;                                                                  \
-    STORE FIELD = "Infinity";                                                          \
-    local i = 1;                                                                       \
-    repeat length(LIST) {                                                              \
-        if CMP {                                                                       \
-            if LIST[i]FIELD < STORE FIELD {                                            \
-                STORE = LIST[i];                                                       \
-            }                                                                          \
-        }                                                                              \
-        i++;                                                                           \
-    }
-
-# Remove duplicate elements from `LIST` by field `FIELD`.
-%define UNIQUE_BY_FIELD(LIST,FIELD)                                                    \ 
-    local i = 1;                                                                       \
-    until i > length(LIST) {                                                           \
+%define LIST_UNIQUE(LIST, TYPE, KEY)                                                   \
+    local start = $start;                                                              \
+    local end_ = $end;                                                                 \
+    if start < 0 {                                                                     \
+        start = length(LIST) + start + 1;                                              \
+    }                                                                                  \
+    if end_ < 0 {                                                                      \
+        end_ = length(LIST) + end_ + 1;                                                \
+    }                                                                                  \
+    local i = start;                                                                   \
+    until i > end_ {                                                                   \
         local j = i + 1;                                                               \
-        until j > length(LIST) {                                                       \
-            if LIST[i] FIELD == LIST[j] FIELD {                                        \
+        until j > end_ {                                                               \
+            if LIST[i].KEY == LIST[j].KEY {                                            \
                 delete LIST[j];                                                        \
+                end_--;                                                                \
             } else {                                                                   \
                 j++;                                                                   \
             }                                                                          \
